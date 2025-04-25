@@ -1,116 +1,99 @@
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 
-int es_nombre_valido(char nombre[]) {
-    for (int i = 0; nombre[i] != '\0'; i++) {
-        if (isdigit(nombre[i])) {
-            return 0; // No es válido si contiene números
-        }
-    }
-    return 1;
-}
+int main(int argc, char *argv[]) {
 
-int main() {
-    char corredores[10][30];//tonesjjjjjj
-    int puntos[10];
-    int salida[10];
-    int n = 0, opc, i, j, temp;
-    char temp_nombre[30];//comenvxlll
+    char nombre[5][30];
+    int puntos[5][4];
+    float promedios[5];
+    int mejorJugador = 0;
+    float mayorPromedio = 0;
+    int len, esValido, num;
+    char entrada[30];
 
-    do {
-        printf("\nSeleccione una opción:\n");
-        printf("1. Registrar corredores\n");
-        printf("2. Mostrar los tres primeros lugares\n");
-        printf("3. Salir\n");
-        printf(">> ");
-        scanf("%d", &opc);
+    for (int i = 0; i < 5; i++) {
+        do {
+            esValido = 1;
+            printf("Ingrese el nombre del jugador %d: ", i + 1);
+            fflush(stdin);
+            fgets(nombre[i], 30, stdin);
+            len = strlen(nombre[i]);
+            if (nombre[i][len - 1] == '\n') {
+                nombre[i][len - 1] = '\0';
+            }
 
-        switch (opc) {
-            case 1:
-                printf("Ingrese el número de corredores (máx 10): ");
-                scanf("%d", &n);
-                if(n > 10 || n < 1){
-                    printf("Cantidad inválida de corredores.\n");
-                    break;
+            if (strlen(nombre[i]) == 0) {
+                esValido = 0;
+            }
+
+            for (int j = 0; j < strlen(nombre[i]); j++) {
+                if (nombre[i][j] >= '0' && nombre[i][j] <= '9') {
+                    esValido = 0;
+                }
+            }
+
+            if (esValido == 0) {
+                printf("Nombre invalido. No puede contener numeros ni estar vacio.\n");
+            }
+
+        } while (esValido == 0);
+
+        for (int j = 0; j < 4; j++) {
+            do {
+                esValido = 1;
+                printf("Ingrese los puntos del jugador %s en el partido %d: ", nombre[i], j + 1);
+                fflush(stdin);
+                fgets(entrada, 30, stdin);
+                len = strlen(entrada);
+                if (entrada[len - 1] == '\n') {
+                    entrada[len - 1] = '\0';
                 }
 
-                for (i = 0; i < n; i++) {
-                    do {
-                        printf("Ingrese el nombre del corredor %d: ", i + 1);
-                        fflush(stdin);
-                        fgets(corredores[i], 30, stdin);
-                        corredores[i][strcspn(corredores[i], "\n")] = 0;
-
-                        if (!es_nombre_valido(corredores[i])) {
-                            printf("Nombre inválido. No debe contener números.\n");
-                        }
-                    } while (!es_nombre_valido(corredores[i]));
-
-                    do {
-                        printf("Ingrese los puntos obtenidos por %s: ", corredores[i]);
-                        if (scanf("%d", &puntos[i]) != 1 || puntos[i] < 0) {
-                            printf("Entrada inválida. Ingrese solo números enteros positivos.\n");
-                            while(getchar() != '\n'); // limpiar buffer
-                            puntos[i] = -1; // marcar como inválido
-                        }
-                    } while (puntos[i] < 0);
-
-                    do {
-                        printf("Ingrese la posición de salida de %s: ", corredores[i]);
-                        if (scanf("%d", &salida[i]) != 1 || salida[i] < 1) {
-                            printf("Entrada inválida. Debe ser un número entero mayor a 0.\n");
-                            while(getchar() != '\n'); // limpiar buffer
-                            salida[i] = 0;
-                        }
-                    } while (salida[i] < 1);
-                }
-                break;
-
-            case 2:
-                if (n == 0) {
-                    printf("Debe registrar corredores primero.\n");
-                    break;
+                if (strlen(entrada) == 0) {
+                    esValido = 0;
                 }
 
-                // Ordenar: mayor puntaje primero, si empatan gana el que salió MÁS ATRÁS (mayor número)
-                for (i = 0; i < n - 1; i++) {
-                    for (j = i + 1; j < n; j++) {
-                        if ((puntos[i] < puntos[j]) ||
-                            (puntos[i] == puntos[j] && salida[i] < salida[j])) {
-                            // Intercambiar puntos
-                            temp = puntos[i];
-                            puntos[i] = puntos[j];
-                            puntos[j] = temp;
-
-                            // Intercambiar posición de salida
-                            temp = salida[i];
-                            salida[i] = salida[j];
-                            salida[j] = temp;
-
-                            // Intercambiar nombres
-                            strcpy(temp_nombre, corredores[i]);
-                            strcpy(corredores[i], corredores[j]);
-                            strcpy(corredores[j], temp_nombre);
-                        }
+                for (int k = 0; k < strlen(entrada); k++) {
+                    if (entrada[k] < '0' || entrada[k] > '9') {
+                        esValido = 0;
                     }
                 }
 
-                printf("\nTop 3 corredores:\n");
-                printf("#\tNombre\t\tPuntos\tPosición de salida\n");
-                for (i = 0; i < 3 && i < n; i++) {
-                    printf("%d\t%s\t\t%d\t%d\n", i + 1, corredores[i], puntos[i], salida[i]);
+                if (esValido == 0) {
+                    printf("Puntos invalidos. Ingrese solo numeros positivos sin letras.\n");
                 }
-                break;
 
-            case 3:
-                printf("Saliendo del programa...\n");
-                break;
+            } while (esValido == 0);
 
-            default:
-                printf("Opción inválida.\n");
+            
+            num = 0;
+            for (int k = 0; k < strlen(entrada); k++) {
+                num = num * 10 + (entrada[k] - '0');
+            }
+
+            puntos[i][j] = num;
         }
-    } while (opc != 3);
+    }
+
+    for (int i = 0; i < 5; i++) {
+        int suma = 0;
+        for (int j = 0; j < 4; j++) {
+            suma += puntos[i][j];
+        }
+        promedios[i] = suma / 4.0;
+
+        if (promedios[i] > mayorPromedio) {
+            mayorPromedio = promedios[i];
+            mejorJugador = i;
+        }
+    }
+
+    printf("\n--- Promedios de los jugadores ---\n");
+    for (int i = 0; i < 5; i++) {
+        printf("Jugador: %s - Promedio: %.2f\n", nombre[i], promedios[i]);
+    }
+
+    printf("\nEl mejor jugador fue: %s con un promedio de %.2f puntos\n", nombre[mejorJugador], mayorPromedio);
 
     return 0;
 }
