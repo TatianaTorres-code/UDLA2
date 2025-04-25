@@ -16,7 +16,7 @@ int main() {
     int puntos[10];
     int salida[10];
     int n = 0, opc, i, j, temp;
-    char temp_nombre[30];//come
+    char temp_nombre[30];//comentatrreett
 
     do {
         printf("\nSeleccione una opción:\n");
