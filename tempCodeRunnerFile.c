@@ -12,7 +12,7 @@ int es_nombre_valido(char nombre[]) {
 }
 
 int main() {
-    char corredores[10][30];
+    char corredores[10][30];//tones
     int puntos[10];
     int salida[10];
     int n = 0, opc, i, j, temp;
